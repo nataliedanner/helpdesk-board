@@ -34,9 +34,54 @@ export default function Board() {
         fetch('./api/tickets')
         .then((r) => r.json())
         .then(setTickets)
-        .catch(console.error);   
-    },   []);
+        .catch(console.error); 
+                },   []);  
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTickets((prevTickets) => {
+                if (prevTickets.length === 0) 
+                    return prevTickets;
+
+                const index = Math.floor(Math.random() * prevTickets.length);
+                const ticket = prevTickets[index];
+
+                const updatedTicket = {...ticket};
+
+                const statusChanges = {
+                    Open: "In Progress", 
+                    "In Progress": "Resolved",
+                    Resolved: "Closed",
+                    Closed: "Open",
+                };
+
+                const priorityChanges = {
+                    Low: "Medium",
+                    Medium: "High",
+                    High: "Critical",
+                    Critical: "Low",
+                };
+
+                const changeType = Math.random() < 0.5 ? "status" : "priority";
+
+                if(changeType === "status") {
+                    updatedTicket.status = statusChanges[ticket.status] || ticket.status;
+                    }
+                else {
+                    updatedTicket.priority = priorityChanges[ticket.priority] || ticket.priority;
+                }
+
+                updatedTicket.updatedAt = new Date().toISOString();
+
+                const newTickets = [...prevTickets];
+                newTickets[index] = updatedTicket;
+                return newTickets;
+            });
+        },
+        Math.floor(Math.random() * 4000) + 6000);
+    
+        return () => clearInterval(interval);
+        },   []);
 
     return (
         <div>
@@ -57,5 +102,5 @@ export default function Board() {
 
             <MyQueueSummary tickets={queue} onRemoveItem={removeItem} onResetQueue={resetQueue}/>
         </div>
-    )
+    );
 }
