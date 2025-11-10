@@ -23,7 +23,7 @@ export function GET() {
         "title": "Printer offline",
         "description": "Office printer shows offline status.",
         "priority": "Low",
-        "status": "In Open",
+        "status": "Open",
         "assignee": "James",
         "updatedAt": "2025-11-5T5:16EST"
     },
