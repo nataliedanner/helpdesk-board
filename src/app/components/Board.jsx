@@ -13,6 +13,8 @@ export default function Board() {
     const [selectedPriority, setSelectedPriority] = useState('All');
     const [searchTerm, setSearchTerm] = useState('');
     const [queue, setQueue] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     function addToQueue(ticket) {
         const alreadyInQueue = queue.some((t) => t.id === ticket.id);
@@ -31,11 +33,19 @@ export default function Board() {
 
 
     useEffect(() =>{
+        setLoading(true);
         fetch('./api/tickets')
         .then((r) => r.json())
-        .then(setTickets)
-        .catch(console.error); 
-                },   []);  
+        .then((data) => {
+            setTickets(data);
+            setLoading(false)
+        })
+        .catch((err) => {
+            console.error(err);
+            setError("Failed to load tickets. ")
+            setLoading(false);
+        })
+        },   []);  
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -97,6 +107,8 @@ export default function Board() {
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm} />
 
+            {loading && <p> Loading tickets </p>}
+            {error && <p> {error} </p>}
             <TicketList tickets={tickets} selectedStatus={selectedStatus} selectedPriority={selectedPriority} searchTerm={searchTerm}
             onAddToQueue={addToQueue} queue={queue} />
 
