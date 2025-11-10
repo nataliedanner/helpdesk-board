@@ -138,3 +138,8 @@ h2 {
   cursor: pointer;
   transform: scale(1.04);
 }
+
+#selected {
+  margin: 5px;
+  padding: 5px;
+}

@@ -19,7 +19,7 @@ export default function MyQueueSummary( {tickets, onRemoveItem, onResetQueue} ) 
                     </li>
                 ))}
             </ul>
-
+                <p id="selected"> Selected: {ticketCount}</p>
             {ticketCount > 0 && (
                 <button id="reset" onClick={onResetQueue}> Clear Queue</button>
             )}
