@@ -9,16 +9,10 @@ import MyQueueSummary from './MyQueueSummary';
 
 export default function Board() {
     const [tickets, setTickets] = useState([]);
-    const [selectedStatus, setSelectedStatus] = useState('All')
-    const [selectedPriority, setSelectedPriority] = useState('All')
-    const [searchTerm, setSearchTerm] = useState('')
-    const [queue, setQueue] = useState([])
-    const [queueTickets, setQueueTickets] = useState([])
-
-    const handleAddToQueue = (ticket) => {
-        setQueueTickets((prev) => [...prev, ticket])
-
-    }
+    const [selectedStatus, setSelectedStatus] = useState('All');
+    const [selectedPriority, setSelectedPriority] = useState('All');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [queue, setQueue] = useState([]);
 
     function addToQueue(ticket) {
         const alreadyInQueue = queue.some((t) => t.id === ticket.id);
@@ -26,6 +20,15 @@ export default function Board() {
             setQueue([...queue, ticket]);
         }
     }
+
+    function removeItem(id) {
+        setQueue((prev) => prev.filter((ticket) => ticket.id !== id));
+    }
+
+    function resetQueue() {
+        setQueue([]);
+    }
+
 
     useEffect(() =>{
         fetch('./api/tickets')
@@ -52,7 +55,7 @@ export default function Board() {
             <TicketList tickets={tickets} selectedStatus={selectedStatus} selectedPriority={selectedPriority} searchTerm={searchTerm}
             onAddToQueue={addToQueue} queue={queue} />
 
-            <MyQueueSummary tickets={queue} />
+            <MyQueueSummary tickets={queue} onRemoveItem={removeItem} onResetQueue={resetQueue}/>
         </div>
     )
 }
